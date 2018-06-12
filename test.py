@@ -1,27 +1,13 @@
 import cv2
-from sklearn.datasets import fetch_mldata
-import os
 import matplotlib.pyplot as plt
 import math
 import numpy as np
 
-FRAME_RESIZE_HEIGHT = 50
-img = cv2.imread("download.jpeg")
-img2 = cv2.imread("proje2.jpg")
-print img2.shape
-print float(FRAME_RESIZE_HEIGHT)/img2.shape[0]*img2.shape[1]
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-ret, thresh1 = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
 class ImageManager:
 
     def __init__(self, show_mode="off"):
-        """
-        :param cnn_man: cnns
-        :return:
-        """
         self.img = None
         self.blobs = None
         self.show_mode = show_mode
@@ -83,23 +69,12 @@ class ImageManager:
         self.blobs[distance.argmin()] += blob
 
     def _split_into_blobs(self):
-        """
-        :return: list of blobs
-        """
-
         if self.img is None:
             raise Exception("Image is not set")
         blobs = []
         img = np.array(self.img, np.int16)
         step = 0
-
         way = [(0, 0)]
-        # img[way[step]] = -1
-        #
-        # # Find first zero point
-        # while img[way[0]] != 0:
-        #     way[0][0] += 1
-
         while True:
             # Try to find a blob
             blob_point = None
@@ -138,12 +113,6 @@ class ImageManager:
         self.blobs = blobs
 
     def extract_roi_and_process(self, img):
-        """
-        :param img:
-        :param roi_region: (left, top, right, bottom) region
-        self.img = cv2.cvtColor(img[roi_region[1]:roi_region[3], roi_region[0]:roi_region[2]], cv2.COLOR_BGR2GRAY)
-        :return:
-        """
         self.img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         self.img = cv2.blur(self.img, (5, 5))
         self.img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 45, 5)
@@ -151,20 +120,13 @@ class ImageManager:
         self.img = cv2.dilate(self.img, (25, 25), iterations=1)
         self.img = cv2.resize(self.img, (int(float(FRAME_RESIZE_HEIGHT)/self.img.shape[0]*self.img.shape[1]),
                                          FRAME_RESIZE_HEIGHT))
+        '''
         cv2.imshow("Processed roi", self.img)
-
+        '''
     def set_img(self, img):
-        """
-        :param img: assigns to inner member img
-        :return:
-        """
         self.img = img
 
     def find_blobs(self, filtering=True):
-        """
-        :param filter: filtrate and merge(true) or not(false)
-        :return:
-        """
         self._split_into_blobs()
 
         if filtering:
@@ -199,19 +161,10 @@ class ImageManager:
         return res
 
 
-class execute:
-
-    def __init__(self, img):
-        self.img = img
-        print "ass"
-
-    @staticmethod
-    def show_img():
-        bool = 1 and 0
-        return bool
-
+FRAME_RESIZE_HEIGHT = 50
+img = cv2.imread("proje2.jpg")
 img_man = ImageManager()
-img_man.extract_roi_and_process(img2)
+img_man.extract_roi_and_process(img)
 img_man.find_blobs()
 images = img_man.classify_blobs()
 for i, image in enumerate(images):
