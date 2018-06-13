@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 
-
 class ImageManager:
 
     def __init__(self, show_mode="off"):
@@ -36,7 +35,7 @@ class ImageManager:
         return sum_x/len(blob_points), sum_y/len(blob_points)
 
     @staticmethod
-    def _validate_point((x, y), img):
+    def _validate_point(x, y, img):
         return (x >= 0) and (y >= 0) and (x < img.shape[0]) and (y < img.shape[1]) and (img[x, y] != -1)
 
     def _blobs_filter(self):
@@ -83,7 +82,7 @@ class ImageManager:
                 for dx in range(-1, 2):
                     for dy in range(-1, 2):
                         point = (way[step][0]+dx, way[step][1]+dy)
-                        if self._validate_point(point, img):
+                        if self._validate_point(point[0], point[1], img):
                             if img[point] != 0:
                                 blob_point = point
                                 break
@@ -99,7 +98,7 @@ class ImageManager:
                     for dx in range(-1, 2):
                         for dy in range(-1, 2):
                             point = (blob_points[blob_step][0]+dx, blob_points[blob_step][1]+dy)
-                            if self._validate_point(point, img):
+                            if self._validate_point(point[0], point[1], img):
                                 if img[point] != 0:
                                     blob_points.append(point)
                                 else:
@@ -132,7 +131,7 @@ class ImageManager:
         if filtering:
             self._blobs_filter()
 
-        print str(len(self.blobs)) + " blobs are found."
+        print((str(len(self.blobs)) + " blobs are found."))
 
     def reproduce_blob(self, blob_points):
         top, left, bottom, right = self.find_bounds(blob_points)
@@ -145,7 +144,7 @@ class ImageManager:
         dx = math.floor(0.7*max_side-center_x)
         dy = math.floor(0.7*max_side-center_y)
         for x, y in blob_points:
-            if self._validate_point((x+int(dx), y+int(dy)), tmp_img):
+            if self._validate_point(x+int(dx), y+int(dy), tmp_img):
                 tmp_img[x+int(dx), y+int(dy), 0] = 255
         tmp_img = cv2.resize(tmp_img, (28, 28))
         return tmp_img
