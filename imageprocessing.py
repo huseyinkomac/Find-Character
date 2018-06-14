@@ -146,7 +146,7 @@ class ImageManager:
         for x, y in blob_points:
             if self._validate_point(x+int(dx), y+int(dy), tmp_img):
                 tmp_img[x+int(dx), y+int(dy), 0] = 255
-        tmp_img = cv2.resize(tmp_img, (28, 28))
+        tmp_img = cv2.resize(tmp_img, (128, 128))
         return tmp_img
 
     def classify_blobs(self):
@@ -154,7 +154,7 @@ class ImageManager:
         if self.blobs is None:
             raise Exception("There are no blobs. Maybe you should run find_blobs first")
         for blob in self.blobs:
-            img = np.array((28, 28, 1), np.uint8)
+            img = np.array((128, 128, 1), np.uint8)
             img = self.reproduce_blob(blob)
             res.append(img)
         return res
