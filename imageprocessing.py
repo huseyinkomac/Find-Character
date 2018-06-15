@@ -146,7 +146,7 @@ class ImageManager:
         for x, y in blob_points:
             if self._validate_point(x+int(dx), y+int(dy), tmp_img):
                 tmp_img[x+int(dx), y+int(dy), 0] = 255
-        tmp_img = cv2.resize(tmp_img, (128, 128))
+        tmp_img = cv2.resize(tmp_img, (128, 128), 3)
         return tmp_img
 
     def classify_blobs(self):
@@ -169,6 +169,7 @@ images = img_man.classify_blobs()
 for i, image in enumerate(images):
     plt.subplot(221+i)
     plt.imshow(image)
+    print(image)
 plt.show()
 
 
