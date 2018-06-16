@@ -1,6 +1,6 @@
 import cv2
-import matplotlib.pyplot as plt
 import math
+from keras.models import load_model
 import numpy as np
 
 
@@ -119,9 +119,7 @@ class ImageManager:
         self.img = cv2.dilate(self.img, (25, 25), iterations=1)
         self.img = cv2.resize(self.img, (int(float(FRAME_RESIZE_HEIGHT)/self.img.shape[0]*self.img.shape[1]),
                                          FRAME_RESIZE_HEIGHT))
-        '''
-        cv2.imshow("Processed roi", self.img)
-        '''
+
     def set_img(self, img):
         self.img = img
 
@@ -130,8 +128,7 @@ class ImageManager:
 
         if filtering:
             self._blobs_filter()
-
-        print((str(len(self.blobs)) + " blobs are found."))
+        print(str(len(self.blobs)) + " blobs are found.")
 
     def reproduce_blob(self, blob_points):
         top, left, bottom, right = self.find_bounds(blob_points)
@@ -140,13 +137,14 @@ class ImageManager:
             max_side = bottom-top
         else:
             max_side = right-left
-        tmp_img = np.zeros((int(max_side*1.4), int(max_side*1.4), 1), np.uint8)
-        dx = math.floor(0.7*max_side-center_x)
-        dy = math.floor(0.7*max_side-center_y)
+        tmp_img = np.zeros((int(max_side*2), int(max_side*2), 1), np.uint8)
+        dx = math.floor(max_side-center_x)
+        dy = math.floor(max_side-center_y)
         for x, y in blob_points:
             if self._validate_point(x+int(dx), y+int(dy), tmp_img):
                 tmp_img[x+int(dx), y+int(dy), 0] = 255
-        tmp_img = cv2.resize(tmp_img, (128, 128), 3)
+        tmp_img = cv2.resize(tmp_img, (28, 28), 1)
+        tmp_img = cv2.bitwise_not(tmp_img)
         return tmp_img
 
     def classify_blobs(self):
@@ -154,23 +152,37 @@ class ImageManager:
         if self.blobs is None:
             raise Exception("There are no blobs. Maybe you should run find_blobs first")
         for blob in self.blobs:
-            img = np.array((128, 128, 1), np.uint8)
+            img = np.array((28, 28, 1), np.uint8)
             img = self.reproduce_blob(blob)
-            res.append(img)
+            res.append(self.get_data_from_network(img))
         return res
 
+    @staticmethod
+    def get_real_character(number):
+        for count, character in enumerate(character_array):
+            if count == number:
+                return character
 
+    def get_data_from_network(self, image):
+        new_model = load_model("first_model_for_ocr.h5")
+        image = np.expand_dims(image, axis=0)
+        image = np.expand_dims(image, axis=3)
+        predictions = new_model.predict(image)
+        for prediction_first in predictions:
+            for count, prediction_second in enumerate(prediction_first):
+                if prediction_second > 0.7:
+                    print(count, prediction_second)
+                    return self.get_real_character(count)
+            return "send a legit character"
+
+character_array = ['p', 'J', 'W', 'T', 'i', '6', 'g', '1', 'z', 'A', 'Q', 'j', 'o', 'X', '8', 'Z', '3', 'l', 'P', 'U', 'd', 'I', 'R', 'e', '2', '7', 'v', 'n', 'C', 'y', 'm', 'r', 'O', '0', 'a', 'B', '4', 'w', 'N', 'F', 'D', 'G', '9', 'L', 'V', 'Y', 'E', 'k', 't', 'b', 'x', '5', 'c', 'H', 'S', 'q', 's', 'K', 'h', 'f', 'u', 'M']
 FRAME_RESIZE_HEIGHT = 50
 img = cv2.imread("proje2.jpg")
 img_man = ImageManager()
 img_man.extract_roi_and_process(img)
 img_man.find_blobs()
-images = img_man.classify_blobs()
-for i, image in enumerate(images):
-    plt.subplot(221+i)
-    plt.imshow(image)
-    print(image)
-plt.show()
+characters = img_man.classify_blobs()
+print(characters)
 
 
 

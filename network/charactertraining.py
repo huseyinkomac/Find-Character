@@ -33,7 +33,7 @@ def train_cnn(model):
 
     model.fit(train_images, train_labels, batch_size=20, epochs=10, verbose=1, validation_data=(test_images, test_labels))
 
-    model.save("first_model_for_ocr.h5")
+    model.save("second_model_for_ocr.h5")
 
 train_cnn(model)
 

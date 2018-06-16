@@ -19,11 +19,12 @@ def get_label(img):
 def get_training_data():
     training_data = []
     for img in tqdm(os.listdir(training_dir)):
-        for i in os.listdir(os.path.join(training_dir, img)):
-            label = get_label(img)
-            path = os.path.join(os.path.join(training_dir, img), i)
-            i = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (28, 28))
-            training_data.append([np.array(i), np.array(label)])
+        for img_second in os.listdir(os.path.join(training_dir, img)):
+            for img_third in os.listdir(os.path.join(os.path.join(training_dir, img), img_second)):
+                label = get_label(img)
+                path = os.path.join(os.path.join(os.path.join(training_dir, img), img_second), img_third)
+                img_third = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (28, 28))
+                training_data.append([np.array(img_third), np.array(label)])
     shuffle(training_data)
     np.save('train_data.npy', training_data)
     return training_data

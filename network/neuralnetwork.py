@@ -8,11 +8,11 @@ from keras.layers.core import Dense
 
 class CNN:
     @staticmethod
-    def build(depth, height):
+    def build(depth, height, width):
 
         model = Sequential()
 
-        model.add(Conv2D(20, (3, 3), padding="same", input_shape=(depth, height)))
+        model.add(Conv2D(20, (3, 3), padding="same", input_shape=(depth, height, width)))
         model.add(Activation("relu"))
         model.add(Conv2D(20, (3, 3), padding="same"))
         model.add(Activation("relu"))

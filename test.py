@@ -8,7 +8,7 @@ import numpy as np
 tr25aining_path = "/home/huseyin/Downloads/datas/training"
 classes = []
 for counter, i in enumerate(os.listdir(tr25aining_path)):
-    print(counter, i)
+    print(i)
 
 '''
 my_array = np.load("/home/huseyin/PycharmProjects/Find Characters/network/train_data.npy")
