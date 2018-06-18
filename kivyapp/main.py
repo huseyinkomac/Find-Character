@@ -1,6 +1,4 @@
-import os
 from random import randint
-os.environ["KIVY_CAMERA"] = "opencv"
 from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen

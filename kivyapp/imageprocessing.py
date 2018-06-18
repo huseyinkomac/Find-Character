@@ -174,11 +174,3 @@ class ImageManager:
             return "send a legit character"
 
 character_array = ['p', 'J', 'W', 'T', 'i', '6', 'g', '1', 'z', 'A', 'Q', 'j', 'o', 'X', '8', 'Z', '3', 'l', 'P', 'U', 'd', 'I', 'R', 'e', '2', '7', 'v', 'n', 'C', 'y', 'm', 'r', 'O', '0', 'a', 'B', '4', 'w', 'N', 'F', 'D', 'G', '9', 'L', 'V', 'Y', 'E', 'k', 't', 'b', 'x', '5', 'c', 'H', 'S', 'q', 's', 'K', 'h', 'f', 'u', 'M']
-FRAME_RESIZE_HEIGHT = 50
-
-
-
-
-
-
-
