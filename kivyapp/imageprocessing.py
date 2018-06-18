@@ -117,8 +117,6 @@ class ImageManager:
         self.img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 45, 5)
         self.img = cv2.erode(self.img, (15, 15), iterations=3)
         self.img = cv2.dilate(self.img, (25, 25), iterations=1)
-        self.img = cv2.resize(self.img, (int(float(FRAME_RESIZE_HEIGHT)/self.img.shape[0]*self.img.shape[1]),
-                                         FRAME_RESIZE_HEIGHT))
 
     def set_img(self, img):
         self.img = img
@@ -164,25 +162,20 @@ class ImageManager:
                 return character
 
     def get_data_from_network(self, image):
-        new_model = load_model("first_model_for_ocr.h5")
+        new_model = load_model("second_model_for_ocr.h5")
         image = np.expand_dims(image, axis=0)
         image = np.expand_dims(image, axis=3)
         predictions = new_model.predict(image)
         for prediction_first in predictions:
             for count, prediction_second in enumerate(prediction_first):
-                if prediction_second > 0.7:
+                if prediction_second > 0.5:
                     print(count, prediction_second)
                     return self.get_real_character(count)
             return "send a legit character"
 
 character_array = ['p', 'J', 'W', 'T', 'i', '6', 'g', '1', 'z', 'A', 'Q', 'j', 'o', 'X', '8', 'Z', '3', 'l', 'P', 'U', 'd', 'I', 'R', 'e', '2', '7', 'v', 'n', 'C', 'y', 'm', 'r', 'O', '0', 'a', 'B', '4', 'w', 'N', 'F', 'D', 'G', '9', 'L', 'V', 'Y', 'E', 'k', 't', 'b', 'x', '5', 'c', 'H', 'S', 'q', 's', 'K', 'h', 'f', 'u', 'M']
 FRAME_RESIZE_HEIGHT = 50
-img = cv2.imread("proje2.jpg")
-img_man = ImageManager()
-img_man.extract_roi_and_process(img)
-img_man.find_blobs()
-characters = img_man.classify_blobs()
-print(characters)
+
 
 
 

@@ -1,0 +1,43 @@
+#:kivy 1.10.0
+<CameraScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Camera:
+            id: camera
+            resolution: (640, 480)
+        Button:
+            text: 'Capture'
+            size_hint_y: None
+            height: '100'
+            on_press: root.capture()
+
+<MenuScreen>
+    FloatLayout:
+        Label:
+            text: 'This is an HOCR app written in Python Kivy. Using CNN, Keras, Tensorflow, OpenCV'
+            pos_hint: {'x': 0.25, 'y': 0.7}
+            size_hint: 0.5, 0.1
+
+        Button:
+            text: 'Try it out!'
+            pos_hint: {'x': 0.25, 'y': .3}
+            size_hint: 0.5, 0.2
+            on_press: root.manager.current = "camera"
+
+<MsgPopup>:
+    size_hint: .7, .4
+    title: "Attention"
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 20
+
+        Label:
+            id: message_label
+            size_hint_y: 0.4
+            text: "Label"
+        Button:
+            text: 'Dismiss'
+            size_hint_y: 0.4
+            on_press: root.dismiss()
