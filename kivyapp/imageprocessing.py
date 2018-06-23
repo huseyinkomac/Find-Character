@@ -126,6 +126,8 @@ class ImageManager:
 
         if filtering:
             self._blobs_filter()
+        if len(self.blobs) > 15:
+            return "couldn't find any characters"
         print(str(len(self.blobs)) + " blobs are found.")
 
     def reproduce_blob(self, blob_points):
@@ -141,8 +143,10 @@ class ImageManager:
         for x, y in blob_points:
             if self._validate_point(x+int(dx), y+int(dy), tmp_img):
                 tmp_img[x+int(dx), y+int(dy), 0] = 255
-        tmp_img = cv2.resize(tmp_img, (28, 28), 1)
+
+        tmp_img = cv2.resize(tmp_img, (50, 50), 1)
         tmp_img = cv2.bitwise_not(tmp_img)
+
         return tmp_img
 
     def classify_blobs(self):
@@ -150,7 +154,7 @@ class ImageManager:
         if self.blobs is None:
             raise Exception("There are no blobs. Maybe you should run find_blobs first")
         for blob in self.blobs:
-            img = np.array((28, 28, 1), np.uint8)
+            img = np.array((50, 50, 1), np.uint8)
             img = self.reproduce_blob(blob)
             res.append(self.get_data_from_network(img))
         return res
@@ -162,7 +166,7 @@ class ImageManager:
                 return character
 
     def get_data_from_network(self, image):
-        new_model = load_model("second_model_for_ocr.h5")
+        new_model = load_model("third_model_for_ocr.h5")
         image = np.expand_dims(image, axis=0)
         image = np.expand_dims(image, axis=3)
         predictions = new_model.predict(image)
@@ -171,6 +175,6 @@ class ImageManager:
                 if prediction_second > 0.5:
                     print(count, prediction_second)
                     return self.get_real_character(count)
-            return "send a legit character"
+            return "0x0"
 
 character_array = ['p', 'J', 'W', 'T', 'i', '6', 'g', '1', 'z', 'A', 'Q', 'j', 'o', 'X', '8', 'Z', '3', 'l', 'P', 'U', 'd', 'I', 'R', 'e', '2', '7', 'v', 'n', 'C', 'y', 'm', 'r', 'O', '0', 'a', 'B', '4', 'w', 'N', 'F', 'D', 'G', '9', 'L', 'V', 'Y', 'E', 'k', 't', 'b', 'x', '5', 'c', 'H', 'S', 'q', 's', 'K', 'h', 'f', 'u', 'M']

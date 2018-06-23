@@ -23,7 +23,7 @@ def get_training_data():
             for img_third in os.listdir(os.path.join(os.path.join(training_dir, img), img_second)):
                 label = get_label(img)
                 path = os.path.join(os.path.join(os.path.join(training_dir, img), img_second), img_third)
-                img_third = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (28, 28))
+                img_third = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (50, 50))
                 training_data.append([np.array(img_third), np.array(label)])
     shuffle(training_data)
     np.save('train_data.npy', training_data)
@@ -36,7 +36,7 @@ def get_testing_data():
         for i in os.listdir(os.path.join(test_dir, img)):
             label = get_label(img)
             path = os.path.join(os.path.join(test_dir, img), i)
-            i = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (28, 28))
+            i = cv2.resize(cv2.imread(path, cv2.IMREAD_GRAYSCALE), (50, 50))
             test_data.append([np.array(i), np.array(label)])
     shuffle(test_data)
     np.save('test_data.npy', test_data)

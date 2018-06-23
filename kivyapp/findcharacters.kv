@@ -1,32 +1,71 @@
 #:kivy 1.10.0
+
+<Button>:
+    background_normal: ''
+    background_color: 1, .2, .3, 1
+
 <CameraScreen>:
+    font_name: 'RobotoItalic'
     BoxLayout:
         orientation: 'vertical'
         Camera:
             id: camera
             resolution: (640, 480)
         Button:
+            font_name: 'Roboto-Italic'
             text: 'Capture'
-            size_hint_y: None
-            height: '100'
+            pos_hint: {'x': .2, 'y': .15}
+            size_hint: 0.6, 0.1
             on_press: root.capture()
+        Button:
+            font_name: 'Roboto-Italic'
+            text: 'Go Back'
+            on_press: root.manager.current = "menu"
+            pos_hint: {'x': .2, 'y': 0}
+            size_hint: 0.6, 0.1
 
 <MenuScreen>
     FloatLayout:
         Label:
+            font_name: 'Roboto-Italic'
             text: 'This is an HOCR app written in Python Kivy. Using CNN, Keras, Tensorflow, OpenCV'
-            pos_hint: {'x': 0.25, 'y': 0.7}
+            pos_hint: {'x': 0.25, 'y': 0.55}
             size_hint: 0.5, 0.1
+            color: 0, 0, 0, 0
 
         Button:
+            font_name: 'Roboto-Italic'
             text: 'Try it out!'
-            pos_hint: {'x': 0.25, 'y': .3}
-            size_hint: 0.5, 0.2
+            pos_hint: {'x': 0.2, 'y': .4}
+            size_hint: 0.2, 0.1
             on_press: root.manager.current = "camera"
+
+        Button:
+            font_name: 'Roboto-Italic'
+            text: 'History'
+            pos_hint: {'x': 0.6, 'y': .4}
+            size_hint: 0.2, 0.1
+            on_press: root.manager.current = "history"
+
+<HistoryScreen>
+    FloatLayout:
+        Label:
+            id: label
+            font_name: 'Roboto-Italic'
+            pos_hint: {'x': 0.25, 'y': 0.55}
+            size_hint: 0.5, 0.1
+            color: 0, 0, 0, 0
+
+        Button:
+            font_name: 'Roboto-Italic'
+            text: 'Go Back'
+            on_press: root.manager.current = "menu"
+            pos_hint: {'x': 0.4, 'y': .4}
+            size_hint: 0.2, 0.1
 
 <MsgPopup>:
     size_hint: .7, .4
-    title: "Attention"
+    title: "Characters Found"
 
     BoxLayout:
         orientation: 'vertical'
@@ -38,6 +77,6 @@
             size_hint_y: 0.4
             text: "Label"
         Button:
-            text: 'Dismiss'
+            text: 'Close'
             size_hint_y: 0.4
             on_press: root.dismiss()
